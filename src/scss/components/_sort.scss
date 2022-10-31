@@ -32,6 +32,11 @@
     padding: 10px 0;
     width: 260px;
 
+    @media (max-width: 400px) {
+      right: none;
+      left: 0;
+    }
+
     ul {
       overflow: hidden;
       li {

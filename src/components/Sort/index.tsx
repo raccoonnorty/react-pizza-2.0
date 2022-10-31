@@ -1,30 +1,40 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { setSortType } from '../../redux/slices/filterSlice';
+import { setSortType } from '../../redux/filter/slice';
+import { SortPropertyEnum } from '../../redux/filter/types';
 
-export const list = [
-  { name: 'популярности (DESC)', sortProperty: 'rating' },
-  { name: 'популярности (ASC)', sortProperty: '-rating' },
-  { name: 'цене (DESC)', sortProperty: 'price' },
-  { name: 'цене (ASC)', sortProperty: '-price' },
-  { name: 'алфавиту (DESC)', sortProperty: 'title' },
-  { name: 'алфавиту (ASC)', sortProperty: '-title' },
+type ListItem = {
+  name: string;
+  sortProperty: SortPropertyEnum;
+};
+
+export const list: ListItem[] = [
+  { name: 'популярности (DESC)', sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: 'популярности (ASC)', sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: 'цене (DESC)', sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: 'цене (ASC)', sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: 'алфавиту (DESC)', sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: 'алфавиту (ASC)', sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-const Sort = ({ value }) => {
+type SortProps = {
+  value: ListItem;
+};
+
+export const Sort: React.FC<SortProps> = React.memo(({ value }) => {
   const dispatch = useDispatch();
-  const sortRef = React.useRef();
+  const sortRef = React.useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = React.useState(false);
 
-  const onClickListItem = (obj) => {
+  const onClickListItem = (obj: ListItem) => {
     dispatch(setSortType(obj));
     setOpen(false);
   };
 
   React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.composedPath().includes(sortRef.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
         setOpen(false);
       }
     };
@@ -69,6 +79,4 @@ const Sort = ({ value }) => {
       )}
     </div>
   );
-};
-
-export default Sort;
+});
